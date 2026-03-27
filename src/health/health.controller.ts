@@ -5,27 +5,26 @@ import { RedisService } from '../modules/redis/redis.service';
 export class HealthController {
   constructor(private redisService: RedisService) {}
 
-  @Get()
-  async check() {
-    try {
-      // Test Redis bằng cách set + get một key đơn giản
-      const testKey = 'health:test:' + Date.now();
-      await this.redisService.set(testKey, 'ok', 60); // TTL 60 giây
+  @Get('redis')
+  async checkRedis() {
+    const startTime = Date.now();
 
-      const value = await this.redisService.get(testKey);
+    // Test write
+    await this.redisService.set('health:check', 'ok', 10);
 
-      return {
-        status: 'ok',
-        redis: 'connected',
-        message: 'Redis hoạt động tốt',
-        timestamp: new Date().toISOString(),
-      };
-    } catch (error) {
-      return {
-        status: 'error',
-        redis: 'failed',
-        message: error.message,
-      };
-    }
+    // Test read
+    const value = await this.redisService.get('health:check');
+
+    // Test delete
+    await this.redisService.del('health:check');
+
+    const responseTime = Date.now() - startTime;
+
+    return {
+      status: 'ok',
+      redis: value === 'ok' ? 'connected' : 'error',
+      responseTime: `${responseTime}ms`,
+      timestamp: new Date().toISOString(),
+    };
   }
 }
