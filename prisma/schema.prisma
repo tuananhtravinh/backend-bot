@@ -1,0 +1,17 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  // BẮT BUỘC XÓA HOẶC COMMENT DÒNG DƯỚI ĐÂY:
+  // url      = env("DATABASE_URL") 
+}
+// Ví dụ một Model đơn giản
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+}
