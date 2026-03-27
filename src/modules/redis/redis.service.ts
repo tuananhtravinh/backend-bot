@@ -10,36 +10,62 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   constructor(private configService: ConfigService) {}
 
   async onModuleInit() {
-    this.client = new Redis({
-      host: this.configService.get<string>('REDIS_HOST'),
-      port: this.configService.get<number>('REDIS_PORT'),
-      password: this.configService.get<string>('REDIS_PASSWORD') || undefined,
-      db: this.configService.get<number>('REDIS_DB', 0),
-      retryStrategy: (times) => Math.min(times * 50, 2000), // reconnect
-      maxRetriesPerRequest: 3,
-    });
+    try {
+      const redisUrl = this.configService.get<string>('REDIS_URL');
 
-    this.client.on('connect', () => this.logger.log('✅ Redis connected'));
-    this.client.on('error', (err) => this.logger.error('❌ Redis error', err));
-    this.client.on('reconnecting', () => this.logger.warn('🔄 Redis reconnecting...'));
+      if (redisUrl) {
+        this.logger.log(`🔗 Connecting to Redis via URL...`);
+        this.client = new Redis(redisUrl, {
+          family: 0,                    // Hỗ trợ cả IPv4 và IPv6 - quan trọng cho Railway
+          retryStrategy: (times: number) => {
+            const delay = Math.min(times * 150, 4000);
+            this.logger.warn(`🔄 Redis reconnecting... (lần ${times})`);
+            return delay;
+          },
+          maxRetriesPerRequest: 10,
+          enableReadyCheck: true,
+        });
+      } else {
+        // Fallback cho local
+        this.client = new Redis({
+          host: this.configService.get<string>('REDIS_HOST', '127.0.0.1'),
+          port: this.configService.get<number>('REDIS_PORT', 6379),
+          password: this.configService.get<string>('REDIS_PASSWORD') || undefined,
+          db: this.configService.get<number>('REDIS_DB', 0),
+          family: 0,
+          retryStrategy: (times: number) => Math.min(times * 150, 4000),
+        });
+      }
+
+      this.client.on('connect', () => this.logger.log('✅ Redis connected successfully'));
+      this.client.on('ready', () => this.logger.log('🚀 Redis is ready'));
+      this.client.on('error', (err) => this.logger.error('❌ Redis error:', err.message));
+      this.client.on('reconnecting', () => this.logger.warn('🔄 Redis reconnecting...'));
+
+    } catch (error) {
+      this.logger.error('❌ Failed to initialize Redis:', error);
+    }
   }
 
   async onModuleDestroy() {
-    await this.client.quit();
-    this.logger.log('Redis client closed');
+    if (this.client) {
+      await this.client.quit();
+      this.logger.log('Redis client closed');
+    }
   }
 
-  // ============== Các method hay dùng cho group buying ==============
+  // ==================== Các method hay dùng cho Group Buying ====================
   getClient(): Redis {
     return this.client;
   }
 
-  async set(key: string, value: string | number | object, ttlSeconds?: number) {
+  async set(key: string, value: any, ttlSeconds?: number): Promise<void> {
     const strValue = typeof value === 'object' ? JSON.stringify(value) : value.toString();
     if (ttlSeconds) {
-      return this.client.set(key, strValue, 'EX', ttlSeconds);
+      await this.client.set(key, strValue, 'EX', ttlSeconds);
+    } else {
+      await this.client.set(key, strValue);
     }
-    return this.client.set(key, strValue);
   }
 
   async get<T>(key: string): Promise<T | null> {
@@ -52,33 +78,15 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  async del(key: string) {
+  async del(key: string): Promise<number> {
     return this.client.del(key);
   }
 
-  // Atomic counter cho group buying (rất quan trọng)
   async incr(key: string): Promise<number> {
     return this.client.incr(key);
   }
 
-  async decr(key: string): Promise<number> {
-    return this.client.decr(key);
-  }
-
-  // TTL cho group (hết hạn tự động)
-  async expire(key: string, seconds: number) {
+  async expire(key: string, seconds: number): Promise<number> {
     return this.client.expire(key, seconds);
-  }
-
-  // Pub/Sub (real-time khi group đủ người)
-  async publish(channel: string, message: string) {
-    return this.client.publish(channel, message);
-  }
-
-  subscribe(channel: string, callback: (channel: string, message: string) => void) {
-    this.client.subscribe(channel, (err) => {
-      if (err) this.logger.error(err);
-    });
-    this.client.on('message', callback);
   }
 }
