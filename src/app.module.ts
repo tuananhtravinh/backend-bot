@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TidbModule } from './modules/tidb/tidb.module';
 
 // Import ConfigModule để đọc file .env
 import { ConfigModule } from '@nestjs/config';
@@ -17,7 +18,8 @@ import { RedisModule } from './modules/redis/redis.module';   // ← Đường d
     }),
 
     // Import RedisModule để có thể inject RedisService vào bất kỳ service nào
-    RedisModule,                // ← Đây là dòng quan trọng nhất
+    RedisModule,
+    TidbModule,                 // ← Đây là dòng quan trọng nhất
 
     // Các module khác của bạn sẽ import vào đây sau này
     // Ví dụ: UserModule, ProductModule, GroupModule, OrderModule...
