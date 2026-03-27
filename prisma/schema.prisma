@@ -1,17 +1,26 @@
 // prisma/schema.prisma
 
+// Cấu hình Prisma Client Generator
+// Sử dụng thư viện prisma-client-js để tạo client cho Javascript/Typescript
 generator client {
   provider = "prisma-client-js"
 }
 
+// Cấu hình nguồn dữ liệu (Datasource)
 datasource db {
+  // Vì TiDB tương thích hoàn toàn với giao thức MySQL, ta chọn provider là "mysql"
   provider = "mysql"
-  // BẮT BUỘC XÓA HOẶC COMMENT DÒNG DƯỚI ĐÂY:
-  // url      = env("DATABASE_URL") 
+  
+  // Lấy chuỗi kết nối từ biến môi trường DATABASE_URL trong file .env
+  url      = env("DATABASE_URL")
 }
-// Ví dụ một Model đơn giản
+
+// Định nghĩa các bảng (Model) trong database
+// Ví dụ: Bảng User
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id    Int     @id @default(autoincrement()) // Khóa chính, tự động tăng
+  email String  @unique                       // Trường email, phải duy nhất
+  name  String?                               // Trường tên, có thể để trống (nullable)
+  
+  // Bạn có thể thêm các trường khác tùy theo nhu cầu dự án
 }
