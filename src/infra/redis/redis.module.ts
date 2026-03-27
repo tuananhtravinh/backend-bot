@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { RedisService } from './redis.service';
 
 @Module({
   imports: [ConfigModule],
   providers: [RedisService],
-  exports: [RedisService],   // <-- quan trọng để inject ở module khác
+  exports: [RedisService],
 })
 export class RedisModule {}

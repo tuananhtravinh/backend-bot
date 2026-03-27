@@ -16,7 +16,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       if (redisUrl) {
         this.logger.log(`🔗 Connecting to Redis via URL...`);
         this.client = new Redis(redisUrl, {
-          family: 0,                    // Hỗ trợ cả IPv4 và IPv6 - quan trọng cho Railway
+          family: 0,
           retryStrategy: (times: number) => {
             const delay = Math.min(times * 150, 4000);
             this.logger.warn(`🔄 Redis reconnecting... (lần ${times})`);
@@ -26,7 +26,6 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
           enableReadyCheck: true,
         });
       } else {
-        // Fallback cho local
         this.client = new Redis({
           host: this.configService.get<string>('REDIS_HOST', '127.0.0.1'),
           port: this.configService.get<number>('REDIS_PORT', 6379),
@@ -54,7 +53,6 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  // ==================== Các method hay dùng cho Group Buying ====================
   getClient(): Redis {
     return this.client;
   }
