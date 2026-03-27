@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { RedisService } from '../modules/redis/redis.service';
+import { RedisService } from '../infra/redis/redis.service';
 
 @Controller('health')
 export class HealthController {
