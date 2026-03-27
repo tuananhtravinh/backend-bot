@@ -1,98 +1,133 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="NestJS Logo" />
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<h1 align="center">Pinduoduo Clone - Backend</h1>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  <strong>Nền tảng thương mại điện tử mua chung theo nhóm (Group Buying)</strong><br>
+  Clone của Pinduoduo (Trung Quốc) với tính năng mua chung, Duoduo Maicai style và C2M nông sản.
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+<p align="center">
+  <a href="https://nestjs.com/" target="_blank">
+    <img src="https://img.shields.io/badge/NestJS-v10+-E0234E.svg" alt="NestJS" />
+  </a>
+  <a href="https://www.typescriptlang.org/" target="_blank">
+    <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6.svg" alt="TypeScript" />
+  </a>
+  <a href="https://www.prisma.io/" target="_blank">
+    <img src="https://img.shields.io/badge/Prisma-ORM-2D3748.svg" alt="Prisma" />
+  </a>
+  <img src="https://img.shields.io/badge/TiDB_Cloud-Database-FF6A00.svg" alt="TiDB Cloud" />
+  <img src="https://img.shields.io/badge/Socket.io-Realtime-010101.svg" alt="Socket.io" />
+  <img src="https://img.shields.io/badge/Firebase-Auth%20%26%20FCM-FFCA28.svg" alt="Firebase" />
+</p>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ✨ Giới thiệu
 
-## Project setup
+Dự án là **backend** cho nền tảng thương mại điện tử mua chung theo nhóm, lấy cảm hứng từ **Pinduoduo (Trung Quốc)**. Hệ thống hỗ trợ mô hình **Group Buying (拼团)**, **Community Group Buying** (tương tự Duoduo Maicai), C2M nông sản, điểm tự lấy cộng đồng, và nhiều tính năng đặc trưng của thương mại điện tử giá rẻ + xã hội.
 
+### Các vai trò chính
+- **Buyer (Khách hàng)**: Mua hàng, tham gia nhóm mua chung, nhận hàng tại điểm tự lấy
+- **Seller (Người bán / Nông dân / Nhà cung cấp)**: Đăng sản phẩm, quản lý cửa hàng
+- **Admin**: Quản trị hệ thống, duyệt seller, quản lý trợ giá, báo cáo
+
+## 🚀 Công nghệ sử dụng
+
+- **Framework**: NestJS 10+
+- **Ngôn ngữ**: TypeScript
+- **Database**: TiDB Cloud (MySQL compatible) + Prisma ORM
+- **Authentication**: JWT + Firebase Auth (tùy chọn)
+- **Realtime**: Socket.io
+- **Storage & Notification**: Firebase Storage & FCM
+- **Validation**: class-validator + class-transformer
+- **Testing**: Jest
+
+## 📁 Cấu trúc dự án
+src/
+├── auth/              # Xác thực, đăng ký, đăng nhập (identifier: email hoặc phone)
+├── common/            # Decorators, guards, interceptors, utils
+├── core/              # Config, database, logger, firebase
+├── modules/           # Các module business chính
+│   ├── products/
+│   ├── group-buying/      # Core: Mua chung theo nhóm
+│   ├── orders/
+│   ├── pickup-points/     # Điểm tự lấy cộng đồng
+│   ├── logistics/
+│   ├── sellers/
+│   ├── admin/
+│   └── notifications/
+├── events/            # Socket.io gateways
+├── jobs/              # Background jobs & cron
+├── shared/            # DTOs, constants, interfaces
+└── prisma/
+
+
+## 🛠️ Project Setup
+
+### 1. Clone repository
 ```bash
-$ npm install
-```
+git clone <your-repo-url>
+cd 
+2. Cài đặt dependencies
+Bashnpm install
+3. Cấu hình môi trường
+Sao chép file .env.example thành .env và điền thông tin:
+Bashcp .env.example .env
+Các biến quan trọng cần cấu hình:
 
-## Compile and run the project
+Database (TiDB Cloud)
+JWT_SECRET
+Firebase credentials
+Redis (nếu dùng BullMQ cho background jobs)
 
-```bash
-# development
-$ npm run start
+4. Khởi chạy dự án
+Bash# Development mode (watch mode)
+npm run start:dev
 
-# watch mode
-$ npm run start:dev
+# Production mode
+npm run start:prod
+5. Seed dữ liệu (Admin đầu tiên)
+Bash# Chạy seeder để tạo tài khoản Admin
+npm run seed
+Tài khoản Admin mặc định (sau khi seed):
 
-# production mode
-$ npm run start:prod
-```
+Identifier: admin@yourapp.com
+Password: Admin@123456 (Nên đổi ngay sau lần đầu đăng nhập)
 
-## Run tests
+📌 Tính năng chính
 
-```bash
-# unit tests
-$ npm run test
+Đăng ký / Đăng nhập bằng email hoặc số điện thoại (tự động nhận diện)
+Hệ thống Group Buying (拼团) đầy đủ
+Community Pickup Points (Điểm tự lấy cộng đồng)
+Quản lý sản phẩm C2M (nông sản, thực phẩm tươi)
+Realtime notification & countdown nhóm mua chung (Socket.io)
+Role-based Access Control (Admin - Buyer - Seller)
+Hỗ trợ logistics & cold chain tracking (sắp triển khai)
 
-# e2e tests
-$ npm run test:e2e
+📚 API Documentation
+Sau khi chạy project, truy cập:
 
-# test coverage
-$ npm run test:cov
-```
+Swagger UI: http://localhost:3000/api
 
-## Deployment
+🧪 Testing
+Bash# Unit tests
+npm run test
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+# E2E tests
+npm run test:e2e
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+# Test coverage
+npm run test:cov
+🚀 Deployment
+Dự án sẵn sàng deploy lên:
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+Railway
+Render
+Vercel (Serverless)
+AWS / DigitalOcean
+TiDB Cloud + Docker
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+📄 License
+This project is MIT licensed.
