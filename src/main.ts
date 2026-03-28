@@ -8,10 +8,19 @@ async function bootstrap() {
     logger: ['log', 'debug', 'error', 'verbose', 'warn'],
   });
   
-  app.enableCors(); // nếu cần
+  // Enable CORS để cho phép request từ domain khác
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
 
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
+  // Railway sẽ tự động gán biến môi trường PORT (thường là 8080)
+  const port = parseInt(process.env.PORT || '3000', 10);
+  
+  // Listen trên '0.0.0.0' để chấp nhận kết nối từ bên ngoài (bắt buộc cho Railway/Docker)
+  await app.listen(port, '0.0.0.0');
+  
   Logger.log(`🚀 Server started at port ${port}`, 'Bootstrap');
+  Logger.log(`🌐 Application is running on: http://localhost:${port}`, 'Bootstrap');
 }
 bootstrap();
