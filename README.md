@@ -46,22 +46,85 @@ Dự án là **backend** cho nền tảng thương mại điện tử mua chung 
 
 ## 📁 Cấu trúc dự án
 src/
-├── auth/              # Xác thực, đăng ký, đăng nhập (identifier: email hoặc phone)
-├── common/            # Decorators, guards, interceptors, utils
-├── core/              # Config, database, logger, firebase
-├── modules/           # Các module business chính
-│   ├── products/
-│   ├── group-buying/      # Core: Mua chung theo nhóm
-│   ├── orders/
-│   ├── pickup-points/     # Điểm tự lấy cộng đồng
-│   ├── logistics/
-│   ├── sellers/
-│   ├── admin/
-│   └── notifications/
-├── events/            # Socket.io gateways
-├── jobs/              # Background jobs & cron
-├── shared/            # DTOs, constants, interfaces
-└── prisma/
+├── main.ts
+├── app.module.ts
+│
+├──health/
+├── common/                          # 📦 Shared Code
+│   ├── decorators/
+│   ├── guards/
+│   ├── filters/
+│   ├── interceptors/
+│   ├── pipes/
+│   ├── types/                       # (thay cho interfaces/)
+│   ├── constants/
+│   └── utils/
+│
+├── config/                          # ⚙️ Configuration
+│   ├── config.module.ts
+│   ├── config.service.ts
+│   └── env.schema.ts
+│
+├── infra/                           # 🏗️ Infrastructure (CỦA BẠN)
+│   ├── redis/                       # ✅ CÓ SẴN
+│   │   ├── redis.module.ts
+│   │   ├── redis.service.ts
+│   │   └── index.ts
+│   │
+│   └── tidb/                        # ✅ CÓ SẴN
+│       ├── tidb.module.ts
+│       ├── tidb.service.ts          # Wrapper Prisma Client
+│       └── index.ts
+│
+├── modules/                         # 🎯 Business Modules
+│   │
+│   ├── auth/                        # 🔐 Authentication
+│   │   ├── auth.module.ts
+│   │   ├── auth.controller.ts       # /api/v1/auth/*
+│   │   ├── auth.service.ts
+│   │   ├── dto/
+│   │   │   ├── register.dto.ts
+│   │   │   ├── login.dto.ts
+│   │   │   ├── refresh-token.dto.ts
+│   │   │   ├── forgot-password.dto.ts
+│   │   │   ├── reset-password.dto.ts
+│   │   │   ├── verify-otp.dto.ts
+│   │   │   └── index.ts
+│   │   ├── strategies/
+│   │   │   ├── jwt.strategy.ts
+│   │   │   ├── local.strategy.ts
+│   │   │   └── index.ts
+│   │   ├── types/
+│   │   │   ├── auth-payload.type.ts
+│   │   │   ├── token-payload.type.ts
+│   │   │   └── index.ts
+│   │   ├── auth.controller.spec.ts  # ✅ Test
+│   │   └── auth.service.spec.ts     # ✅ Test
+│   │
+│   ├── user/                        # 👤 User Management
+│   │   ├── user.module.ts
+│   │   ├── user.controller.ts       # /api/v1/users/*
+│   │   ├── user.service.ts
+│   │   ├── dto/
+│   │   │   ├── create-user.dto.ts
+│   │   │   ├── update-user.dto.ts
+│   │   │   ├── update-profile.dto.ts
+│   │   │   ├── change-password.dto.ts
+│   │   │   └── index.ts
+│   │   ├── types/
+│   │   │   ├── user.type.ts
+│   │   │   └── index.ts
+│   │   ├── user.controller.spec.ts  # ✅ Test
+│   │   └── user.service.spec.ts     # ✅ Test
+│   │
+│   └── ... (shop, product, order)
+│
+├── prisma/                          # 💾 Database Schema
+│   ├── schema.prisma                # 🎯 TẠO BẢNG Ở ĐÂY
+│   ├── migrations/
+│   └── seed.ts
+│
+└── docs/
 
 
 ## 🛠️ Project Setup

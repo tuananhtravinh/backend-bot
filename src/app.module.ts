@@ -1,23 +1,20 @@
+// src/app.module.ts
 import { Module } from '@nestjs/common';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
+import { DatabaseModule } from './shared/database/database.module';
+import { RedisModule } from './shared/redis/redis.module';
 import { ConfigModule } from '@nestjs/config';
-
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-
-// Module từ infra
-import { PrismaModule } from './infra/prisma/prisma.module';
-import { RedisModule } from './infra/redis/redis.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-    }),
-    PrismaModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    DatabaseModule,
     RedisModule,
+    AuthModule,
+    UserModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
