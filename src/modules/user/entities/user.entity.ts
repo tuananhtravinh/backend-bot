@@ -8,3 +8,13 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// Thêm: SafeUserResponse không có password để dùng trong response
+export interface SafeUserResponse {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
